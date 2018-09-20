@@ -210,6 +210,53 @@ $(window).on('load', function () {
 /* 2 */
 /***/ (function(module, exports) {
 
+//gambiarra pra fazer o select ter um elemento nulo pra não salvar sempre o primeiro da lista por padrão
+var nullable_relations = ['professional_id'];
+
+nullable_relations.forEach(function (relation_key) {
+    var select_item = jQuery('[name=' + relation_key + ']');
+    // Add the "None" option
+    select_item.prepend(jQuery("<option></option>").attr('value', '').text('Nenhum'));
+
+    // Select it when editing an item that has a null relation
+    if (jQuery('[name=' + relation_key + '] option:selected').attr('selected') === undefined) {
+        select_item.val('').change();
+    }
+});
+
+$(document).ready(function () {
+    var selectProfessional = $('select[name=professional_id]');
+    var selectCustomerType = $("select[name=customer_type_id]");
+
+    var customerTypeTextSelected = $("select[name=customer_type_id] option:selected").text();
+    var professionalTextSelected = $("select[name=customer_type_id] option:selected").text();
+    //logo que carrega a página já ve se o tipo de cliente esta marcado como Em Terapia
+    ManageProfessionalSelect(customerTypeTextSelected);
+
+    //quando muda o selecte de tipo de cliente
+    selectCustomerType.change(function () {
+        var customerTypeTextSelected = $(this).find("option:selected").text();
+        ManageProfessionalSelect(customerTypeTextSelected);
+    });
+
+    function ManageProfessionalSelect(customerTypeTextSelected) {
+        //se selecionado algo diferente de Em Terapia
+        if (customerTypeTextSelected != "Em Terapia") {
+            //seta o valor pra nulo, o voyager usa o select2 pra fazer os selects, o trigger serve pra atualizar o valor no span do select                    
+            selectProfessional.val("").trigger("change");
+            //esconde o select de profissional
+            selectProfessional.parent().hide();
+            //se não esta marcado Em Terapia o select de profissional não é obrigatório
+            selectProfessional.attr("required", false);
+        } else {
+            //senão, mostra o select de profissional
+            selectProfessional.parent().show();
+            //e se esta marcado Em Terapia o select de profissional é obrigatório
+            selectProfessional.attr("required", true);
+        }
+    }
+});
+
 var selCustomerModel = '#create-customer-modal',
     $editEventModal = $('#edit-event-modal'),
     $fastCustomerCreate = $('#customer-create'),
