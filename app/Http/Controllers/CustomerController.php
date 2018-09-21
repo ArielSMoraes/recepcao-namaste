@@ -40,8 +40,9 @@ class CustomerController extends BaseVoyagerBaseController
         $this->authorize('browse', app($dataType->model_name));
 
         $getter = $dataType->server_side ? 'paginate' : 'get';
-
+        
         $search = (object) ['value' => $request->get('s'), 'key' => $request->get('key'), 'filter' => $request->get('filter')];
+        
         $searchable = $dataType->server_side ? array_keys(SchemaManager::describeTable(app($dataType->model_name)->getTable())->toArray()) : '';
         $orderBy = $request->get('order_by');
         $sortOrder = $request->get('sort_order', null);
@@ -56,10 +57,13 @@ class CustomerController extends BaseVoyagerBaseController
             // If a column has a relationship associated with it, we do not want to show that field
             $this->removeRelationshipField($dataType, 'browse');
 
-            if ($search->value && $search->key && $search->filter) {
-                $search_filter = ($search->filter == 'equals') ? '=' : 'LIKE';
-                $search_value = ($search->filter == 'equals') ? $search->value : '%'.$search->value.'%';
-                $query->where($search->key, $search_filter, $search_value);
+            $keys = explode(",", $request->get('key'));
+
+            if ($search->value && $search->key && $search->filter) {                            
+                $search_value = '%'.$search->value.'%';                                    
+                foreach ($keys as $key => $value) {                    
+                    $query->orWhere($value, 'LIKE', $search_value)->get();
+                }
             }
 
             if ($orderBy && in_array($orderBy, $dataType->fields())) {
@@ -513,5 +517,18 @@ class CustomerController extends BaseVoyagerBaseController
             $i->$column = ($key + 1);
             $i->save();
         }
+    }
+
+    public function check_if_customer_exists(Request $request){
+        if(!is_null($request->value) && !is_null($request->fieldName)){
+            if($request->fieldName == "cpf"){
+                $cpfReplace = str_replace(".", "", $request->value);
+                $cpfReplace = str_replace("-","", $cpfReplace);
+                $dataTypeContent = DB::table("customers")->where($request->fieldName, $request->value)->orWhere($request->fieldName, $cpfReplace)->first(); // If Model doest exist, get data from table name                        
+            }else{
+                $dataTypeContent = DB::table("customers")->where($request->fieldName, $request->value)->first(); // If Model doest exist, get data from table name                        
+            }            
+            return response()->json($dataTypeContent);
+        }        
     }
 }

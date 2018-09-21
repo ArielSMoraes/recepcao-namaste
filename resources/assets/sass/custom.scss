@@ -4,3 +4,34 @@
         display: none;
     }
 }
+
+.search-form-clientes{
+    .form-search{
+        float: none;
+        width: 100%;
+    }
+}
+
+.search-form-menu{
+    .form-search{            
+        margin: 10px;
+        width: 817px;
+    }
+}
+
+.msg-validation-exists{
+    color: white;
+    background-color: red;
+    padding: 10px;
+    position: absolute;
+    top: 12px;
+    right: 16px;
+    font-weight: bold;
+    width: 220px;
+
+    a{
+        color: white;
+        text-decoration: underline;
+        text-transform: uppercase;
+    }
+}

@@ -39,7 +39,12 @@
                 @endfor
             </ol>
             @show
-        </div>
+            
+            <div class="search-form-menu">
+                @include('voyager::partials.search-input')            
+            </div>
+            
+        </div>        
         <ul class="nav navbar-nav @if (config('voyager.multilingual.rtl')) navbar-left @else navbar-right @endif">
             <li class="dropdown profile">
                 <a href="#" class="dropdown-toggle text-right" data-toggle="dropdown" role="button"

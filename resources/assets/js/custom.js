@@ -9,7 +9,8 @@ $.ajaxSetup({
 let selCustomerModel = '#create-customer-modal',
     editEventModal = '#edit-event-modal',
     $editEventModal = $(editEventModal),
-    customerSelectText = 'select.select2[name="event_belongstomany_customer_relationship[]"]';
+    customerSelectText = 'select.select2[name="event_belongstomany_customer_relationship[]"]',
+    customersEventSelectText = 'select.select2[name="participation_belongstomany_customer_relationship[]"]';
 
 ///////////////////
 // Eventos
@@ -121,6 +122,60 @@ $(document.body).on('submit', editEventModal + ' form', (e) => {
     });
 });
 
+function initEventModalCustomersEvents(){
+    
+    let $customersEventSelectText2 = $(customersEventSelectText);
+
+    $customersEventSelectText2.select2({
+        placeholder: 'Quais clientes participaram?',
+        allowClear: true,
+        ajax: {
+            url: '/admin/clientes',
+            dataType: 'json',
+            data: (params) => {
+                let query = {
+                    page: params.page || 1,
+                    s: params.term,
+                    key: 'name',
+                    filter: 'contains'
+                };
+                return query;
+            },
+            processResults: (response) => {
+                return {
+                    results: $.map(response.data, (item) => {
+                        return {
+                            text: item.name,
+                            id: item.id
+                        }
+                    }),
+                    pagination: {
+                        more: true
+                    }
+                };
+            }
+        },
+        language: {
+            noResults: () => {
+                let newTag = $('.form-group.clientes input.select2-search__field').val();
+                return `<div id="newNoResults">
+                            <div class="noResults">Nenhum resultado encontrado</div>
+                            <div class="createNew">
+                                <a href="`+ selCustomerModel +`" class="btn btn-primary form-control" data-keyboard="true" data-customer-name="` + newTag + `" data-toggle="modal" data-backdrop="false" data-target="`+ selCustomerModel +`">Criar novo cliente: <strong>` + newTag + `</strong></a>
+                            </div>
+                        </div>`;
+            }
+        },
+        escapeMarkup: (markup) => {
+            return markup;
+        }
+    }).on('select2:select', (e) => {
+        toastr.success('Cliente adicionado!');
+    }).on('select2:unselect', (e) => {
+        toastr.error('Cliente removido!');
+    });
+};
+
 ///////////////
 // Geral
 //////////////
@@ -131,5 +186,10 @@ $(window).on('load', () => {
     // BREAD de Eventos
     if($bd.hasClass('events')) {
         initEventModal();
+    }
+
+    // BREAD de participations
+    if($bd.hasClass('participations')) {        
+        initEventModalCustomersEvents();
     }
 });

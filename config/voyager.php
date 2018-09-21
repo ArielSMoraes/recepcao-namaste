@@ -209,6 +209,7 @@ return [
     ],
 
     'additional_js' => [
+        'js/mask.js',
         'js/custom.js'
     ],
 

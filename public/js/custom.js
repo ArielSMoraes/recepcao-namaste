@@ -86,7 +86,8 @@ $.ajaxSetup({
 var selCustomerModel = '#create-customer-modal',
     editEventModal = '#edit-event-modal',
     $editEventModal = $(editEventModal),
-    customerSelectText = 'select.select2[name="event_belongstomany_customer_relationship[]"]';
+    customerSelectText = 'select.select2[name="event_belongstomany_customer_relationship[]"]',
+    customersEventSelectText = 'select.select2[name="participation_belongstomany_customer_relationship[]"]';
 
 ///////////////////
 // Eventos
@@ -193,6 +194,55 @@ $(document.body).on('submit', editEventModal + ' form', function (e) {
     });
 });
 
+function initEventModalCustomersEvents() {
+
+    var $customersEventSelectText2 = $(customersEventSelectText);
+
+    $customersEventSelectText2.select2({
+        placeholder: 'Quais clientes participaram?',
+        allowClear: true,
+        ajax: {
+            url: '/admin/clientes',
+            dataType: 'json',
+            data: function data(params) {
+                var query = {
+                    page: params.page || 1,
+                    s: params.term,
+                    key: 'name',
+                    filter: 'contains'
+                };
+                return query;
+            },
+            processResults: function processResults(response) {
+                return {
+                    results: $.map(response.data, function (item) {
+                        return {
+                            text: item.name,
+                            id: item.id
+                        };
+                    }),
+                    pagination: {
+                        more: true
+                    }
+                };
+            }
+        },
+        language: {
+            noResults: function noResults() {
+                var newTag = $('.form-group.clientes input.select2-search__field').val();
+                return '<div id="newNoResults">\n                            <div class="noResults">Nenhum resultado encontrado</div>\n                            <div class="createNew">\n                                <a href="' + selCustomerModel + '" class="btn btn-primary form-control" data-keyboard="true" data-customer-name="' + newTag + '" data-toggle="modal" data-backdrop="false" data-target="' + selCustomerModel + '">Criar novo cliente: <strong>' + newTag + '</strong></a>\n                            </div>\n                        </div>';
+            }
+        },
+        escapeMarkup: function escapeMarkup(markup) {
+            return markup;
+        }
+    }).on('select2:select', function (e) {
+        toastr.success('Cliente adicionado!');
+    }).on('select2:unselect', function (e) {
+        toastr.error('Cliente removido!');
+    });
+};
+
 ///////////////
 // Geral
 //////////////
@@ -204,21 +254,107 @@ $(window).on('load', function () {
     if ($bd.hasClass('events')) {
         initEventModal();
     }
+
+    // BREAD de participations
+    if ($bd.hasClass('participations')) {
+        initEventModalCustomersEvents();
+    }
 });
 
 /***/ }),
 /* 2 */
 /***/ (function(module, exports) {
 
-//gambiarra pra fazer o select ter um elemento nulo pra não salvar sempre o primeiro da lista por padrão
+/*
+    Preenchimento dos campos pelo CEP
+*/
+
+function limpa_formulário_cep() {
+    // Limpa valores do formulário de cep.
+    $("input[name=street]").val("");
+    $("input[name=neighborhood]").val("");
+    $("input[name=city]").val("");
+    $("input[name=country]").val("");
+    $("select[name=state]").val("");
+}
+
+//Quando o campo cep perde o foco.
+$("input[name=cep]").blur(function () {
+    //Nova variável "cep" somente com dígitos.
+    var cep = $(this).val().replace(/\D/g, '');
+
+    //Verifica se campo cep possui valor informado.
+    if (cep != "") {
+
+        //Expressão regular para validar o CEP.
+        var validacep = /^[0-9]{8}$/;
+
+        //Valida o formato do CEP.
+        if (validacep.test(cep)) {
+
+            //Preenche os campos com "..." enquanto consulta webservice.
+            $("input[name=street]").val("...");
+            $("input[name=neighborhood]").val("...");
+            $("input[name=city]").val("...");
+            $("input[name=country]").val("...");
+
+            //Consulta o webservice viacep.com.br/
+            $.getJSON("https://viacep.com.br/ws/" + cep + "/json/?callback=?", function (dados) {
+                //cep são paulo 01408-001
+                if (!("erro" in dados)) {
+                    //Atualiza os campos com os valores da consulta.
+                    $("input[name=street]").val(dados.logradouro);
+                    $("input[name=neighborhood]").val(dados.bairro);
+                    $("input[name=city]").val(dados.localidade);
+                    $("input[name=country]").val("Brasil");
+                    $("select[name=state] option").removeAttr("selected");
+                    $("select[name=state] option").each(function () {
+                        if ($(this).text().indexOf(dados.uf + " - ") != -1) {
+                            $(this).attr("selected", true);
+                        }
+                    });
+                    $("select[name=state]").trigger("change");
+                } //end if.
+                else {
+                        //CEP pesquisado não foi encontrado.
+                        limpa_formulário_cep();
+                        alert("CEP não encontrado.");
+                    }
+            });
+
+            //só pra garantir que mudou da um settimeout
+            setTimeout(function () {
+                $("select[name=state]").trigger("change");
+            }, 600);
+        } //end if.
+        else {
+                //cep é inválido.
+                limpa_formulário_cep();
+                alert("Formato de CEP inválido.");
+            }
+    } //end if.
+    else {
+            //cep sem valor, limpa formulário.
+            limpa_formulário_cep();
+        }
+});
+
+/*
+    END Preenchimento dos campos pelo CEP
+    ------------------------------------------------------------------------------------------------------------------------------------
+*/
+
+/*
+    BEGIN validação Tipo de Cliente/Terapeuta
+*/
+
+//fazer o select ter um elemento nulo pra não salvar sempre o primeiro da lista por padrão
 var nullable_relations = ['professional_id'];
 
 nullable_relations.forEach(function (relation_key) {
     var select_item = jQuery('[name=' + relation_key + ']');
-    // Add the "None" option
     select_item.prepend(jQuery("<option></option>").attr('value', '').text('Nenhum'));
 
-    // Select it when editing an item that has a null relation
     if (jQuery('[name=' + relation_key + '] option:selected').attr('selected') === undefined) {
         select_item.val('').change();
     }
@@ -229,7 +365,6 @@ $(document).ready(function () {
     var selectCustomerType = $("select[name=customer_type_id]");
 
     var customerTypeTextSelected = $("select[name=customer_type_id] option:selected").text();
-    var professionalTextSelected = $("select[name=customer_type_id] option:selected").text();
     //logo que carrega a página já ve se o tipo de cliente esta marcado como Em Terapia
     ManageProfessionalSelect(customerTypeTextSelected);
 
@@ -255,6 +390,106 @@ $(document).ready(function () {
             selectProfessional.attr("required", true);
         }
     }
+
+    //mascaras
+    var maskBehavior = function maskBehavior(val) {
+        return val.replace(/\D/g, '').length === 11 ? '(00) 00000-0000' : '(00) 0000-00009';
+    },
+        options = { onKeyPress: function onKeyPress(val, e, field, options) {
+            field.mask(maskBehavior.apply({}, arguments), options);
+        }
+    };
+
+    $('input[name=phone]').mask(maskBehavior, options);
+
+    //fazer com  que sempre que venha valores NULL nos telefones troca pra vazio pra que a mascara possa funcionar
+    if ($('input[name=emergency_phone]').val() == "NULL") {
+        $('input[name=emergency_phone]').val("");
+    }
+    if ($('input[name=secondary_phone]').val() == "NULL") {
+        $('input[name=secondary_phone]').val("");
+    }
+
+    $('input[name=emergency_phone]').mask(maskBehavior, options);
+    $('input[name=secondary_phone]').mask(maskBehavior, options);
+
+    $("input[name=cep]").mask('00000-000');
+    $("input[name=cpf]").mask('000.000.000-00');
+});
+
+/*
+    END validação Tipo de cliente/Profissional
+    ---------------------------------------------------------------------------------------------------------------------------------------------------------
+*/
+
+/*
+    Validação CPF e Email clientes repetidos
+*/
+String.prototype.replaceAll = String.prototype.replaceAll || function (needle, replacement) {
+    return this.split(needle).join(replacement);
+};
+
+$(document).ready(function () {
+    var cpfInitial = $("input[name=cpf]").val();
+    var emailInitial = $("input[name=email]").val();
+
+    $("input[name=cpf]").blur(function () {
+        var _this = this;
+
+        var inputName = $(this).attr('name');
+        var value = $(this).val();
+        $(".msg-" + inputName + "-validation").remove();
+        $("button.btn.btn-primary.save").removeAttr("disabled");
+        if (value != "" && value != null) {
+            $.ajax({
+                url: '/admin/check-if-customer-exists',
+                type: 'POST',
+                data: { "value": value, "fieldName": inputName },
+                success: function success(data) {
+                    if (!jQuery.isEmptyObject(data)) {
+                        var cpfReplace = data[inputName].replaceAll(".", "").replaceAll("-", "");
+                        var cpfInitialReplace = cpfInitial.replaceAll(".", "").replaceAll("-", "");
+                        if (cpfInitialReplace != cpfReplace) {
+                            $(_this).parent().append("<span class='msg-validation-exists msg-" + inputName + "-validation'>Já existe um cliente com esse " + inputName + " <a href='/admin/clientes/" + data["id"] + "/edit'>acessar</a></span>");
+                            $("button.btn.btn-primary.save").attr("disabled", "disabled");
+                        }
+                    }
+                }
+            });
+        }
+    });
+
+    $("input[name=email]").blur(function () {
+        var _this2 = this;
+
+        var inputName = $(this).attr('name');
+        var value = $(this).val();
+        $(".msg-" + inputName + "-validation").remove();
+        $("button.btn.btn-primary.save").removeAttr("disabled");
+        if (value != "" && value != null) {
+            $.ajax({
+                url: '/admin/check-if-customer-exists',
+                type: 'POST',
+                data: { "value": value, "fieldName": inputName },
+                success: function success(data) {
+                    if (!jQuery.isEmptyObject(data) && emailInitial != data[inputName]) {
+                        $(_this2).parent().append("<span class='msg-validation-exists msg-" + inputName + "-validation'>Já existe um cliente com esse " + inputName + " <a href='/admin/clientes/" + data["id"] + "/edit'>acessar</a></span>");
+                        $("button.btn.btn-primary.save").attr("disabled", "disabled");
+                    }
+                }
+            });
+        }
+    });
+});
+
+/*
+    END Validação CPF clientes repetidos
+    ---------------------------------------------------------------------------------------------------------------------------------------------------------
+*/
+
+$(document).ready(function () {
+    $('select.select2[name="customer_belongsto_how_did_find_out_relationship_1[]"]').attr("required", true);
+    $('select.select2[name="customer_type_id"]').attr("required", true);
 });
 
 var selCustomerModel = '#create-customer-modal',
