@@ -16,9 +16,10 @@ let selCustomerModel = '#create-customer-modal',
 // Eventos
 ///////////////////
 function initEventModal(){
-    
+    console.log('initEventModal')
+    console.log(customerSelectText)
     let $customerSelect2 = $(customerSelectText);
-
+    console.log($customerSelect2)
     $customerSelect2.select2({
         placeholder: 'Quais clientes participaram?',
         allowClear: true,
@@ -37,6 +38,7 @@ function initEventModal(){
             processResults: (response) => {
                 return {
                     results: $.map(response.data, (item) => {
+                        console.log(item)
                         return {
                             text: item.name,
                             id: item.id
@@ -127,12 +129,14 @@ $(document.body).on('submit', editEventModal + ' form', (e) => {
 // Geral
 //////////////
 $(window).on('load', () => {
+    
 
     const $bd = $('body');
     
     // BREAD de Eventos
     if($bd.hasClass('events')) {
         initEventModal();
+
     }
 
     // BREAD de participations
