@@ -199,20 +199,36 @@ $(document.body).on('submit', editEventModal + ' form', function (e) {
 ///////////////
 // Geral
 //////////////
-$(window).on('load', function () {
-
-    var $bd = $('body');
+$(document).ready(function () {
+    var bd = $('body');
 
     // BREAD de Eventos
-    if ($bd.hasClass('events')) {
+    if (bd.hasClass('events')) {
         initEventModal();
     }
 
     // BREAD de participations
-    if ($bd.hasClass('participations')) {
-        //initEventModalCustomersEvents();
-    }
+    //if($bd.hasClass('participations')) {        
+    //initEventModalCustomersEvents();
+    //}
 });
+
+//$(window).on('load', () => {
+
+
+//const $bd = $('body');
+
+// BREAD de Eventos
+//if($bd.hasClass('events')) {
+//initEventModal();
+
+//}
+
+// BREAD de participations
+//if($bd.hasClass('participations')) {        
+//initEventModalCustomersEvents();
+///}
+//});
 
 /***/ }),
 /* 2 */

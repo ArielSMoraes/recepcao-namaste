@@ -128,19 +128,33 @@ $(document.body).on('submit', editEventModal + ' form', (e) => {
 ///////////////
 // Geral
 //////////////
-$(window).on('load', () => {
-    
-
-    const $bd = $('body');
+$(document).ready(function(){
+    var bd = $('body');
     
     // BREAD de Eventos
-    if($bd.hasClass('events')) {
+    if(bd.hasClass('events')) {
         initEventModal();
-
     }
 
     // BREAD de participations
-    if($bd.hasClass('participations')) {        
+    //if($bd.hasClass('participations')) {        
         //initEventModalCustomersEvents();
-    }
+    //}
 });
+
+//$(window).on('load', () => {
+    
+
+    //const $bd = $('body');
+    
+    // BREAD de Eventos
+    //if($bd.hasClass('events')) {
+        //initEventModal();
+
+    //}
+
+    // BREAD de participations
+    //if($bd.hasClass('participations')) {        
+        //initEventModalCustomersEvents();
+    ///}
+//});
