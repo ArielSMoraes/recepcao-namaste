@@ -124,7 +124,7 @@ $(document.body).on('submit', editEventModal + ' form', (e) => {
 
 function initEventModalCustomersEvents(){
     
-    let $customersEventSelectText2 = $(customersEventSelectText);
+    var $customersEventSelectText2 = $(customersEventSelectText);
 
     $customersEventSelectText2.select2({
         placeholder: 'Quais clientes participaram?',
