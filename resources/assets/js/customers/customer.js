@@ -85,6 +85,7 @@ $("input[name=cep]").blur(function() {
 //fazer o select ter um elemento nulo pra não salvar sempre o primeiro da lista por padrão
 var nullable_relations = [
     'professional_id',
+    'interviewer_id'
 ];
 
 nullable_relations.forEach(function (relation_key) {
@@ -92,7 +93,7 @@ nullable_relations.forEach(function (relation_key) {
     select_item.prepend(
         jQuery("<option></option>")
             .attr('value','')
-            .text('Nenhum')
+            .text('Selecionar')
     );
 
     if (jQuery('[name='+relation_key+'] option:selected').attr('selected') === undefined) {
