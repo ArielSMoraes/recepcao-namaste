@@ -41,10 +41,13 @@
             @show
             
             <div class="search-form-menu">
-                @include('voyager::partials.search-input')            
+                @include('voyager::partials.search-input')                            
             </div>
             
         </div>        
+        <!--<a href="/admin/customer-events" class="btn btn-success btn-add-new" style="margin: 10px;">
+            <i class="voyager-plus"></i> <span>Relatorios</span>
+        </a>-->
         <ul class="nav navbar-nav @if (config('voyager.multilingual.rtl')) navbar-left @else navbar-right @endif">
             <li class="dropdown profile">
                 <a href="#" class="dropdown-toggle text-right" data-toggle="dropdown" role="button"

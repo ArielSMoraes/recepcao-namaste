@@ -18,5 +18,5 @@ Route::get('/', function () {
 Route::group(['prefix' => 'admin'], function () {
     Voyager::routes();
 
-    Route::post('check-if-customer-exists', ['uses' => 'CustomerController@check_if_customer_exists', 'as' => 'checkIfCustomerExists']);
+    Route::post('check-if-customer-exists', ['uses' => 'CustomerController@check_if_customer_exists', 'as' => 'checkIfCustomerExists']);        
 });

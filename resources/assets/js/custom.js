@@ -1,4 +1,5 @@
 require('./customers/customer.js');
+require('./events_reports/events_reports.js');
 
 $.ajaxSetup({
     headers: {

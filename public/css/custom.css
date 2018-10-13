@@ -33,3 +33,27 @@
   text-transform: uppercase;
 }
 
+.customer-events #search-input {
+  background-color: transparent;
+  border: none;
+}
+
+.customer-events #search-input .input-group {
+  margin: 0 20px;
+}
+
+.customer-events #search-input .input-group label {
+  padding-top: 10px;
+  margin-right: 9px;
+}
+
+.customer-events #search-input .input-group #from,
+.customer-events #search-input .input-group #to {
+  padding: 10px;
+}
+
+.checkbox-export {
+  margin: 15px 0 0 !important;
+  width: auto !important;
+}
+
