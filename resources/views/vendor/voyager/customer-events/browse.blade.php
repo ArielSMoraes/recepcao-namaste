@@ -108,7 +108,7 @@
                                             Sexo
                                         </th>   
                                         <th>
-                                            Pai e Mãe
+                                            Fez Pai e Mãe?
                                         </th>   
                                         <th>
                                             Estado Civil
@@ -135,11 +135,11 @@
                                         </td>
                                         <td>
                                             @if($row->customer_marital_status == 0)
-                                                Solteiro
+                                                Solteiro(a)
                                             @elseif($row->customer_marital_status == 1)
-                                                Casado
+                                                Casado(a)
                                             @else
-                                                Separado
+                                                Separado(a)
                                             @endif
                                         </td>
                                         <td>
