@@ -13,17 +13,19 @@
 @stop
 
 @section('content')
-<form method="get" class="form-search" action="{{action('CustomerEventController@index')}}">
+<form method="get" class="form-search customer-events-form" action="{{action('CustomerEventController@index')}}">
     <div id="search-input" style="margin: 40px;">                  
         <input type="hidden" value="contains" name="filter" />
         
-        <div class="input-group col-md-2">
-            <input type="text" class="form-control" placeholder="Nome do evento" name="s" value="{{ empty($search) ? '' : $search->value }}">           
+        <div class="input-group col-md-2">            
+            <label class="col-md-12">Nome do evento</label>
+            <input type="text" class="form-control" name="s" value="{{ empty($search) ? '' : $search->value }}">           
         </div>
 
         <div class="input-group col-md-2">
+            <label class="col-md-12">Tipo de cliente</label>
             <select name="customer_type" class="col-md-12">
-                <option value="0" @if ($search->customer_type == 0) selected="selected" @endif>Selecione o tipo de cliente</option>
+                <option value="0" @if ($search->customer_type == 0) selected="selected" @endif>Selecione</option>
                 @foreach($clientTypes as $client)
                 <option value="{{$client->id}}" @if ($search->customer_type == $client->id) selected="selected" @endif>{{$client->name}}</option>
                 @endforeach
@@ -31,29 +33,39 @@
         </div>
 
         <div class="input-group col-md-2">
-            <select name="event_month" class="col-md-12">
-                <option value="0" @if ($search->event_month == 0) selected="selected" @endif>Selecione um mês</option>
-                <option value="1" @if ($search->event_month == 1) selected="selected" @endif>Janeiro</option>
-                <option value="2" @if ($search->event_month == 2) selected="selected" @endif>Fevereiro</option>
-                <option value="3" @if ($search->event_month == 3) selected="selected" @endif>Março</option>
-                <option value="4" @if ($search->event_month == 4) selected="selected" @endif>Abril</option>
-                <option value="5" @if ($search->event_month == 5) selected="selected" @endif>Maio</option>
-                <option value="6" @if ($search->event_month == 6) selected="selected" @endif>Junho</option>
-                <option value="7" @if ($search->event_month == 7) selected="selected" @endif>Julho</option>
-                <option value="8" @if ($search->event_month == 8) selected="selected" @endif>Agosto</option>
-                <option value="9" @if ($search->event_month == 9) selected="selected" @endif>Setembro</option>
-                <option value="10" @if ($search->event_month == 10) selected="selected" @endif>Outubro</option>
-                <option value="11" @if ($search->event_month == 11) selected="selected" @endif>Novembro</option>
-                <option value="12" @if ($search->event_month == 12) selected="selected" @endif>Dezembro</option>            
-            </select>
-        </div>  
-
-        <div class="input-group col-md-2">
+            <label class="col-md-12">Categoria do evento</label>
             <select name="event_categories" class="col-md-12">
-                <option value="0" @if ($search->event_categories == 0) selected="selected" @endif>Selecione a categoria do evento</option>
+                <option value="0" @if ($search->event_categories == 0) selected="selected" @endif>Selecione</option>
                 @foreach($eventCategories as $event_category)
                 <option value="{{$event_category->id}}" @if ($search->event_categories == $event_category->id) selected="selected" @endif>{{$event_category->name}}</option>
                 @endforeach
+            </select>
+        </div>        
+
+        <div class="input-group col-md-2">
+            <label class="col-md-12">Sexo</label>
+            <select name="sexo" class="col-md-12">
+                <option value="" @if ($search->sexo == "") selected="selected" @endif>Selecione</option>                
+                <option value="1" @if ($search->sexo != "" && $search->sexo == 1) selected="selected" @endif>Feminino</option>                
+                <option value="0" @if ($search->sexo != "" && $search->sexo == 0) selected="selected" @endif>Masculino</option>                
+            </select>
+        </div>
+
+        <div class="input-group col-md-2">
+            <label class="col-md-12">Morador da Comunidade?</label>
+            <select name="community" class="col-md-12">
+                <option value="" @if ($search->community == null) selected="selected" @endif>Selecione</option>                
+                <option value="1" @if ($search->community != "" && $search->community == 1) selected="selected" @endif>Sim</option>                
+                <option value="0" @if ($search->community != "" && $search->community == 0) selected="selected" @endif>Não</option>                
+            </select>
+        </div>
+
+        <div class="input-group col-md-2">
+            <label class="col-md-12">Fez Pai e Mãe?</label>
+            <select name="pai_e_mae" class="col-md-12">
+                <option value="" @if ($search->pai_e_mae == null) selected="selected" @endif>Selecione</option>                
+                <option value="1" @if ($search->pai_e_mae != "" && $search->pai_e_mae == 1) selected="selected" @endif>Sim</option>                
+                <option value="0" @if ($search->pai_e_mae != "" && $search->pai_e_mae == 0) selected="selected" @endif>Não</option>                
             </select>
         </div>
 
@@ -67,16 +79,14 @@
             <input type="text" id="to" name="to" value="{{ empty($search) ? '' : $search->to }}">
         </div>  
 
-        <div class="input-group col-md-2">
-            <label>Exportar como excel</label>
-            <input type="checkbox" value="export" name="export" class="checkbox-export" />
+        <div class="input-group col-md-2" style="padding-top: 35px;">
+            <label for="export">Exportar como excel</label>
+            <input type="checkbox" value="export" name="export" id="export" class="checkbox-export" />
         </div>      
 
-        <span class="input-group-btn">
-            <button class="btn btn-info btn-lg" type="submit">
-                <i class="voyager-search"></i>
-            </button>
-        </span>         
+        
+        <button type="submit" class="btn btn-primary save search-btn">Buscar</button>
+        
     </div>
 </form>    
     <div class="page-content browse container-fluid">
@@ -93,7 +103,19 @@
                                         </th>  
                                         <th>
                                             Tipo de Cliente
-                                        </th>                                       
+                                        </th> 
+                                        <th>
+                                            Sexo
+                                        </th>   
+                                        <th>
+                                            Pai e Mãe
+                                        </th>   
+                                        <th>
+                                            Estado Civil
+                                        </th>                                   
+                                        <th>
+                                            Morador da Comunidade?
+                                        </th> 
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -104,6 +126,24 @@
                                         </td>                                                                                                                                                                             
                                         <td>
                                             {{$row->customer_type_name}}
+                                        </td>
+                                        <td>
+                                            {{$row->customer_sexo == 0 ? "Masculino" : "Feminino"}}
+                                        </td>
+                                        <td>
+                                            {{$row->customer_pai_e_mae == 0 ? "Não" : "Sim"}}
+                                        </td>
+                                        <td>
+                                            @if($row->customer_marital_status == 0)
+                                                Solteiro
+                                            @elseif($row->customer_marital_status == 1)
+                                                Casado
+                                            @else
+                                                Separado
+                                            @endif
+                                        </td>
+                                        <td>
+                                            {{$row->customer_is_from_community == 0 ? "Não" : "Sim"}}
                                         </td>
                                     </tr>                                    
                                     @endforeach

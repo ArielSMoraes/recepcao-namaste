@@ -17,6 +17,7 @@ class CollectionExport implements FromCollection
  
     public function collection()
     {
+        //foreach($data in $this->data)
         return collect($this->data);
     }
 }

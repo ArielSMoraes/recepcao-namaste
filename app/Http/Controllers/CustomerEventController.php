@@ -29,6 +29,9 @@ class CustomerEventController extends BaseVoyagerBaseController
         'from' => $request->get('from'),
         'to' => $request->get('to'),
         'export' => $request->get('export'),
+        'sexo' => $request->get('sexo'),
+        'community' => $request->get('community'),
+        'pai_e_mae' => $request->get('pai_e_mae'),
         'event_day' => $request->get('event_day')];
 
         $dataTypeContent = DB::table("customers")->where('name', $search->value)->get();    
@@ -49,6 +52,10 @@ class CustomerEventController extends BaseVoyagerBaseController
             ->join('customer_types', 'customers.customer_type_id', '=', 'customer_types.id')
             ->select('customers.name as customer_name')
             ->addSelect('customer_types.name as customer_type_name')
+            ->addSelect('customers.sexo as customer_sexo')
+            ->addSelect('customers.marital_status as customer_marital_status')
+            ->addSelect('customers.community as customer_is_from_community')            
+            ->addSelect('customers.pai_e_mae as customer_pai_e_mae')            
             ->where('customers.deleted_at', '=', NULL)
             ->distinct('customers.id')
             ->orderBy('customers.name');
@@ -71,6 +78,18 @@ class CustomerEventController extends BaseVoyagerBaseController
 
             if($search->event_categories != 0){
                 $dataTypeContent = $dataTypeContent->where('events.event_category_id', '=', $search->event_categories);  
+            }
+            
+            if($search->community != null){
+                $dataTypeContent = $dataTypeContent->where('customers.community', '=', $search->community);  
+            }
+
+            if($search->sexo != null){
+                $dataTypeContent = $dataTypeContent->where('customers.sexo', '=', $search->sexo);  
+            }
+
+            if($search->pai_e_mae != null){
+                $dataTypeContent = $dataTypeContent->where('customers.pai_e_mae', '=', $search->pai_e_mae);  
             }
 
             if($search->from != null && $search->to != null){                

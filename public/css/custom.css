@@ -49,11 +49,43 @@
 
 .customer-events #search-input .input-group #from,
 .customer-events #search-input .input-group #to {
-  padding: 10px;
+  padding: 6px;
 }
 
 .checkbox-export {
   margin: 15px 0 0 !important;
   width: auto !important;
+}
+
+.customer-events .customer-events-form #search-input .input-group {
+  display: block;
+  float: left;
+}
+
+.customer-events .customer-events-form {
+  float: left;
+  margin-bottom: 40px;
+}
+
+.customer-events .customer-events-form #search-input button.search-btn {
+  padding: 15px;
+  display: block;
+  background: #22A7F0;
+  color: white;
+  clear: both;
+  float: left;
+  margin: 18px;
+}
+
+.customer-events .customer-events-form .input-group label {
+  padding-left: 0;
+}
+
+.customer-events .customer-events-form .input-group select {
+  height: 35px;
+}
+
+.customer-events .customer-events-form .input-group input {
+  border: 1px solid #a7a7a7 !important;
 }
 
