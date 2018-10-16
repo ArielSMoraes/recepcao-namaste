@@ -20,13 +20,13 @@ class CollectionExport implements FromCollection, WithMapping, WithHeadings
     * @var Invoice $invoice
     */
     public function map($data): array
-    {                
+    {                  
         return [
             $data->customer_name,
             $data->customer_type_name,
             $data->customer_sexo == 1 ? "Feminino" : "Masculino",
             $data->customer_pai_e_mae == 0 ? "Não" : "Sim",
-            $data->customer_marital_status == 0 ? "Solteiro(a)" : $data->customer_marital_status == 1 ? "Casado(a)" : "Separado(a)",
+            $data->customer_marital_status == 0 ? "Solteiro(a)" : ($data->customer_marital_status == 1 ? "Casado(a)" : "Separado(a)"),
             $data->customer_is_from_community == "0" ? "Não" : "Sim"
             //Date::dateTimeToExcel($data->created_at),
         ];
