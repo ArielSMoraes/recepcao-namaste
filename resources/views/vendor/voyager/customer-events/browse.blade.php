@@ -14,17 +14,18 @@
 
 @section('content')
 <form method="get" class="form-search customer-events-form" action="{{action('CustomerEventController@index')}}">
+    <div class="panel-body">                  
     <div id="search-input" style="margin: 40px;">                  
         <input type="hidden" value="contains" name="filter" />
         
-        <div class="input-group col-md-2">            
-            <label class="col-md-12">Nome do evento</label>
-            <input type="text" class="form-control" name="s" value="{{ empty($search) ? '' : $search->value }}">           
+        <div class="form-group col-md-6">            
+            <label>Nome do evento</label>
+            <input type="text" class="form-control" name="s" placeholder="Nome do evento" value="{{ empty($search) ? '' : $search->value }}">           
         </div>
 
-        <div class="input-group col-md-2">
-            <label class="col-md-12">Tipo de cliente</label>
-            <select name="customer_type" class="col-md-12">
+        <div class="form-group col-md-6">
+            <label>Tipo de cliente</label>
+            <select name="customer_type" class="col-md-12 select2">
                 <option value="0" @if ($search->customer_type == 0) selected="selected" @endif>Selecione</option>
                 @foreach($clientTypes as $client)
                 <option value="{{$client->id}}" @if ($search->customer_type == $client->id) selected="selected" @endif>{{$client->name}}</option>
@@ -32,9 +33,9 @@
             </select>
         </div>
 
-        <div class="input-group col-md-2">
-            <label class="col-md-12">Categoria do evento</label>
-            <select name="event_categories" class="col-md-12">
+        <div class="form-group col-md-6">
+            <label>Categoria do evento</label>
+            <select name="event_categories" class="col-md-12 select2">
                 <option value="0" @if ($search->event_categories == 0) selected="selected" @endif>Selecione</option>
                 @foreach($eventCategories as $event_category)
                 <option value="{{$event_category->id}}" @if ($search->event_categories == $event_category->id) selected="selected" @endif>{{$event_category->name}}</option>
@@ -42,51 +43,50 @@
             </select>
         </div>        
 
-        <div class="input-group col-md-2">
-            <label class="col-md-12">Sexo</label>
-            <select name="sexo" class="col-md-12">
+        <div class="form-group col-md-6">
+            <label>Sexo</label>
+            <select name="sexo" class="col-md-12 select2">
                 <option value="" @if ($search->sexo == "") selected="selected" @endif>Selecione</option>                
                 <option value="1" @if ($search->sexo != "" && $search->sexo == 1) selected="selected" @endif>Feminino</option>                
                 <option value="0" @if ($search->sexo != "" && $search->sexo == 0) selected="selected" @endif>Masculino</option>                
             </select>
         </div>
 
-        <div class="input-group col-md-2">
-            <label class="col-md-12">Morador da Comunidade?</label>
-            <select name="community" class="col-md-12">
+        <div class="form-group col-md-6">
+            <label>Morador da Comunidade?</label>
+            <select name="community" class="col-md-12 select2">
                 <option value="" @if ($search->community == null) selected="selected" @endif>Selecione</option>                
                 <option value="1" @if ($search->community != "" && $search->community == 1) selected="selected" @endif>Sim</option>                
                 <option value="0" @if ($search->community != "" && $search->community == 0) selected="selected" @endif>Não</option>                
             </select>
         </div>
 
-        <div class="input-group col-md-2">
-            <label class="col-md-12">Fez Pai e Mãe?</label>
-            <select name="pai_e_mae" class="col-md-12">
+        <div class="form-group col-md-6">
+            <label>Fez Pai e Mãe?</label>
+            <select name="pai_e_mae" class="col-md-12 select2">
                 <option value="" @if ($search->pai_e_mae == null) selected="selected" @endif>Selecione</option>                
                 <option value="1" @if ($search->pai_e_mae != "" && $search->pai_e_mae == 1) selected="selected" @endif>Sim</option>                
                 <option value="0" @if ($search->pai_e_mae != "" && $search->pai_e_mae == 0) selected="selected" @endif>Não</option>                
             </select>
         </div>
 
-        <div class="input-group col-md-2">
+        <div class="form-group col-md-6">
             <label for="from">De: </label>
-            <input type="text" id="from" name="from" value="{{ empty($search) ? '' : $search->from }}">
+            <input type="text" id="from" name="from" autocomplete="off" value="{{ empty($search) ? '' : $search->from }}">
         </div>
 
-        <div class="input-group col-md-2">
+        <div class="form-group col-md-6">
             <label for="to">Até: </label>
-            <input type="text" id="to" name="to" value="{{ empty($search) ? '' : $search->to }}">
+            <input type="text" id="to" name="to" autocomplete="off" value="{{ empty($search) ? '' : $search->to }}">
         </div>  
 
-        <div class="input-group col-md-2" style="padding-top: 35px;">
+        <div class="form-group col-md-6" style="padding-top: 35px;">
             <label for="export">Exportar como excel</label>
             <input type="checkbox" value="export" name="export" id="export" class="checkbox-export" />
-        </div>      
-
+        </div>
         
         <button type="submit" class="btn btn-primary save search-btn">Buscar</button>
-        
+    </div>
     </div>
 </form>    
     <div class="page-content browse container-fluid">

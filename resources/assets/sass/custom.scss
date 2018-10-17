@@ -37,57 +37,45 @@
 }
 
 .customer-events {
-    #search-input{
-        background-color: transparent;
-        border: none;
-        .input-group{
-            margin: 0 20px;
+    .customer-events-form{    
+        margin-bottom: 40px;
+        background-color: white;
+        
 
-            label{
-                padding-top: 10px;
-                margin-right: 9px;
+        #search-input{
+            background-color: transparent;
+            border: none;
+            display: block;
+
+            .form-group{            
+                label{
+                    padding-top: 10px;
+                    margin-right: 9px;
+                }
+
+                #from, #to{
+                    padding: 6px 10px;
+                }
+
+                .checkbox-export{
+                    margin: 15px 0 0 !important;
+                    width: auto !important;
+                }
             }
 
-            #from, #to{
-                padding: 6px;
+            button.search-btn{
+                padding: 15px;
+                display: block;
+                background: #22A7F0;
+                color: white; 
+                clear: both;
+                float:left;
+                margin: 18px;
+            }
+
+            input{
+                border: 1px solid #e4eaec !important;
             }
         }
     }
-}
-
-.checkbox-export{
-    margin: 15px 0 0 !important;
-    width: auto !important;
-}
-
-.customer-events .customer-events-form #search-input .input-group{
-    display: block;
-    float: left;
-}
-
-.customer-events .customer-events-form{
-    float: left;
-    margin-bottom: 40px;
-}
-
-.customer-events .customer-events-form #search-input button.search-btn{
-    padding: 15px;
-    display: block;
-    background: #22A7F0;
-    color: white; 
-    clear: both;
-    float:left;
-    margin: 18px;
-}
-
-.customer-events .customer-events-form .input-group label{
-    padding-left: 0;
-}
-
-.customer-events .customer-events-form .input-group select{
-    height: 35px;
-}
-
-.customer-events .customer-events-form .input-group input{
-    border: 1px solid #a7a7a7 !important;
 }

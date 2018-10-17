@@ -4,7 +4,8 @@ $( function() {
         .datepicker({
           dateFormat: dateFormat,
           defaultDate: "+1w",
-          changeMonth: true,
+          changeMonth: true,          
+          changeYear: true,
           numberOfMonths: 3,
           dayNames: ['Domingo', 'Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado'],
    dayNamesMin: ['D', 'S', 'T', 'Q', 'Q', 'S', 'S', 'D'],
@@ -20,7 +21,8 @@ $( function() {
       to = $( "#to" ).datepicker({
         dateFormat: dateFormat,
         defaultDate: "+1w",
-        changeMonth: true,
+        changeMonth: true,        
+        changeYear: true,
         numberOfMonths: 3,
         dayNames: ['Domingo', 'Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado'],
    dayNamesMin: ['D', 'S', 'T', 'Q', 'Q', 'S', 'S', 'D'],
